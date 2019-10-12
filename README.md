@@ -3,7 +3,7 @@ Python YouTube Getter
 
 Simple implementation of [pytube](https://github.com/nficano/pytube).
 
-Downloads the highest quality progressive video stream from a list of YouTube links in a file. Born after 
+Downloads the highest quality progressive mp4 video stream from a list of YouTube links in a file. Born after 
 coming up short trying to find a decent free macOS utility to download YouTube videos in bulk.
 
 ## Requirements
