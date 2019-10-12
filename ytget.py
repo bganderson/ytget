@@ -10,7 +10,7 @@ from pytube import YouTube
 
 
 # VERSION of this application
-VERSION = "0.2.1"
+VERSION = "0.2.2"
 # DOWNLOADS_DIR defines to the parent downloads directory
 DOWNLOADS_DIR = "./downloads/"
 # LINK_FILE_GLOB defines the glob used to find link files
@@ -142,18 +142,17 @@ def download_from_link(link, file_name, max_retries=3):
         else:
             pass
         # check if filename already exists in target directory
-        target_file = Path(
-            target_path, yt.streams.first().default_filename)
+        yt.register_on_progress_callback(pytube_on_progress)
+        yt.register_on_complete_callback(pytube_on_complete)
+        stream = yt.streams.filter(subtype='mp4', progressive=True).first()
+        target_file = Path(target_path, stream.default_filename)
         if target_file.exists() and not target_file.is_dir():
             carriage_return()
             print(f"({link_current}/{links_count}) Skipping:", 
-                f"{yt.streams.first().default_filename} ({link})")
+                f"{stream.default_filename} ({link})")
             break
-        yt.register_on_progress_callback(pytube_on_progress)
-        yt.register_on_complete_callback(pytube_on_complete)
         try:
-            yt.streams.filter(
-                subtype='mp4', progressive=True).first().download(target_path)
+            stream.download(target_path)
         except urllib.error.HTTPError as err:
             print(f"\nFailed: HTTP Error {err.code}: {err.reason}.", 
                 f"Retrying... (Attempt {retry_attempt}/{max_retries})")
