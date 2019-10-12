@@ -190,6 +190,8 @@ def main():
             link_current = 1
             for link in links:
                 link = link.rstrip(os.linesep)
+                if link.strip() == "":
+                    continue
                 if download_from_link(link, file_name):
                     increment_count()
                 else:
