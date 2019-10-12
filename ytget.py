@@ -10,7 +10,7 @@ from pytube import YouTube
 
 
 # VERSION of this application
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 # DOWNLOADS_DIR defines to the parent downloads directory
 DOWNLOADS_DIR = "./downloads/"
 # LINK_FILE_GLOB defines the glob used to find link files
@@ -90,7 +90,7 @@ def increment_count():
 def download_from_link(link, file_name, max_retries=3):
     """Download YouTube Video From Link
 
-    Attempts to download the highest quality progressive video stream
+    Attempts to download the highest quality mp4 progressive video stream
     available for the given YouTube video link. Handles failures 
     gracefully and will attempt retries. Checks whether or not the file
     has already been downloaded and skips if so.
@@ -152,7 +152,8 @@ def download_from_link(link, file_name, max_retries=3):
         yt.register_on_progress_callback(pytube_on_progress)
         yt.register_on_complete_callback(pytube_on_complete)
         try:
-            yt.streams.first().download(target_path)
+            yt.streams.filter(
+                subtype='mp4', progressive=True).first().download(target_path)
         except urllib.error.HTTPError as err:
             print(f"\nFailed: HTTP Error {err.code}: {err.reason}.", 
                 f"Retrying... (Attempt {retry_attempt}/{max_retries})")
